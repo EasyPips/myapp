@@ -7,14 +7,32 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simple mock auth
-    if (username === 'user' && password === 'password') {
-      localStorage.setItem('user', JSON.stringify({ username }));
-      navigate('/');
-    } else {
-      setError('Invalid credentials');
+    try {
+      const res = await fetch('http://localhost:8000/api/token/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // Fetch user profile to get role
+        const profileRes = await fetch('http://localhost:8000/api/profile/', {
+          headers: { Authorization: `Bearer ${data.access}` },
+        });
+        const profile = await profileRes.json();
+        localStorage.setItem('user', JSON.stringify({
+          username: profile.username,
+          role: profile.role,
+          token: data.access,
+        }));
+        navigate('/');
+      } else {
+        setError(data.detail || 'Login failed');
+      }
+    } catch {
+      setError('Network error');
     }
   };
 
