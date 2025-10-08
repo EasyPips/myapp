@@ -4,32 +4,62 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/useCart';
 import { motion } from 'framer-motion';
 
+const discountedProducts = [
+  { ...products[0], discount: 20 },
+  { ...products[1], discount: 20 },
+];
+const bannerWidth = 400; // Adjust if needed
+
 const Home = () => {
   const { dispatch } = useCart();
   return (
     <div className="max-w-5xl mx-auto px-4">
-      {/* Banner with two discounted products */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg flex flex-col sm:flex-row items-center justify-between p-6 mb-8">
-        {products.slice(0, 2).map(product => (
-          <div key={product.id} className="flex items-center gap-4 mb-4 sm:mb-0">
-            <img src={product.image} alt={product.name} className="w-16 h-16 object-contain bg-white rounded-full p-2" />
-            <div>
-              <div className="font-bold text-lg">{product.name}</div>
-              <div className="line-through text-gray-200 text-sm">${(product.price * 1.3).toFixed(2)}</div>
-              <div className="text-yellow-300 font-bold text-xl">${(product.price * 0.8).toFixed(2)} <span className="text-xs text-white font-normal">(20% OFF)</span></div>
-            </div>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ backgroundColor: '#fbbf24', color: '#1e293b' }}
-              style={{ backgroundColor: '#facc15', color: '#1e293b' }}
-              className="ml-2 px-3 py-1 rounded font-semibold transition-colors duration-200"
-              onClick={() => dispatch({ type: 'ADD_TO_CART', product: { ...product, price: (product.price * 0.8) } })}
+      {/* Auto-scrolling banner with two discounted products */}
+      <div className="overflow-hidden bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg py-8 mb-8" style={{ minHeight: 180 }}>
+        <motion.div
+          className="flex gap-8"
+          style={{ width: 'max-content' }}
+          animate={{ x: [0, -bannerWidth * discountedProducts.length] }}
+          transition={{
+            repeat: Infinity,
+            repeatType: 'loop',
+            duration: 8,
+            ease: 'linear',
+          }}
+        >
+          {[...discountedProducts, ...discountedProducts].map((product, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-4 mx-2 bg-white bg-opacity-10 rounded-lg px-6 py-5 min-w-[350px]"
+              style={{ width: bannerWidth }}
             >
-              Get Deal
-            </motion.button>
-          </div>
-        ))}
-        <div className="text-center sm:text-right flex-1">
+              <img src={product.image} alt={product.name} className="w-20 h-20 object-contain bg-white rounded-full p-2" />
+              <div>
+                <div className="font-bold text-lg">{product.name}</div>
+                <div className="line-through text-gray-200 text-sm">${(product.price * 1.3).toFixed(2)}</div>
+                <div className="text-yellow-300 font-bold text-xl">
+                  ${(product.price * 0.8).toFixed(2)}{' '}
+                  <span className="text-xs text-white font-normal">(20% OFF)</span>
+                </div>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ backgroundColor: '#fbbf24', color: '#1e293b' }}
+                  style={{ backgroundColor: '#facc15', color: '#1e293b' }}
+                  className="mt-2 px-3 py-1 rounded font-semibold transition-colors duration-200"
+                  onClick={() =>
+                    dispatch({
+                      type: 'ADD_TO_CART',
+                      product: { ...product, price: product.price * 0.8 },
+                    })
+                  }
+                >
+                  Get Deal
+                </motion.button>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+        <div className="text-center mt-4">
           <div className="font-bold text-2xl mb-1">Limited Time Offer!</div>
           <div className="text-sm">Grab these deals before they're gone.</div>
         </div>

@@ -7,9 +7,12 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderHistory from './pages/OrderHistory';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import AdminDashboard from './pages/AdminDashboard';
 import { CartProvider } from './context/CartContext';
 import { useState } from 'react';
-
+import { FaShoppingCart, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import { useCart } from './context/useCart';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -17,11 +20,16 @@ function App() {
     return u ? JSON.parse(u) : null;
   });
 
+  const { cart = [] } = useCart?.() || {};
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
     window.location.href = '/login';
   };
+
+  // Protect admin route
+  const isAdmin = user && user.username === 'admin';
 
   return (
     <CartProvider>
@@ -41,25 +49,24 @@ function App() {
             </div>
             {/* Cart and user right */}
             <div className="flex items-center gap-4">
-              <Link to="/cart" className="relative hover:text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25A3.75 3.75 0 0011.25 18h1.5a3.75 3.75 0 003.75-3.75V6.75m-9 7.5h9m-9 0V6.75A2.25 2.25 0 017.5 4.5h9a2.25 2.25 0 012.25 2.25v7.5m-13.5 0h-1.5m1.5 0v7.5A2.25 2.25 0 007.5 21h9a2.25 2.25 0 002.25-2.25v-7.5" />
-                </svg>
+              <Link to="/cart" className="relative hover:text-blue-500" title="Cart">
+                <FaShoppingCart className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                    {cart.length}
+                  </span>
+                )}
               </Link>
               {user ? (
                 <div className="flex items-center gap-2">
                   <span className="hidden sm:inline">{user.username}</span>
-                  <button onClick={handleLogout} title="Logout" className="hover:text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0v6m0 0a2.25 2.25 0 01-2.25 2.25h-3A2.25 2.25 0 018.25 15V9m7.5 6H6.75" />
-                    </svg>
+                  <button onClick={handleLogout} title="Logout" className="hover:text-blue-500">
+                    <FaSignOutAlt className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
                   </button>
                 </div>
               ) : (
-                <Link to="/login" title="Login" className="hover:text-blue-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0v6m0 0a2.25 2.25 0 01-2.25 2.25h-3A2.25 2.25 0 018.25 15V9m7.5 6H6.75" />
-                  </svg>
+                <Link to="/login" title="Login" className="hover:text-blue-500">
+                  <FaUserCircle className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
                 </Link>
               )}
             </div>
@@ -74,6 +81,19 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/admin"
+              element={
+                isAdmin ? (
+                  <AdminDashboard />
+                ) : (
+                  <div className="text-center mt-20 text-2xl text-red-500">
+                    Access Denied
+                  </div>
+                )
+              }
+            />
           </Routes>
         </main>
       </Router>
