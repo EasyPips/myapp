@@ -8,7 +8,7 @@ const Footer = () => {
         {/* Store Info / Logo */}
         <div className="col-span-2 md:col-span-1">
           <h3 className="text-xl font-bold mb-4 text-emerald-400">Heasycommerce</h3>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-white">
             Quality products for your everyday life.
             <br />
             &copy; {new Date().getFullYear()} Heasycommerce. All rights reserved.
@@ -19,10 +19,10 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4 border-b border-emerald-400/30 pb-1">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="/shop" className="text-gray-400 hover:text-emerald-400 transition duration-300">All Products</a></li>
-            <li><a href="/about" className="text-gray-400 hover:text-emerald-400 transition duration-300">About Us</a></li>
-            <li><a href="/faq" className="text-gray-400 hover:text-emerald-400 transition duration-300">FAQ</a></li>
-            <li><a href="/contact" className="text-gray-400 hover:text-emerald-400 transition duration-300">Contact</a></li>
+            <li><a href="/shop" className="text-white hover:text-emerald-400 transition duration-300">All Products</a></li>
+            <li><a href="/about" className="text-white hover:text-emerald-400 transition duration-300">About Us</a></li>
+            <li><a href="/faq" className="text-white hover:text-emerald-400 transition duration-300">FAQ</a></li>
+            <li><a href="/contact" className="text-white hover:text-emerald-400 transition duration-300">Contact</a></li>
           </ul>
         </div>
 
@@ -30,10 +30,10 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4 border-b border-emerald-400/30 pb-1">Legal</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="/privacy" className="text-gray-400 hover:text-emerald-400 transition duration-300">Privacy Policy</a></li>
-            <li><a href="/terms" className="text-gray-400 hover:text-emerald-400 transition duration-300">Terms of Service</a></li>
-            <li><a href="/returns" className="text-gray-400 hover:text-emerald-400 transition duration-300">Returns & Refunds</a></li>
-            <li><a href="/shipping" className="text-gray-400 hover:text-emerald-400 transition duration-300">Shipping Info</a></li>
+            <li><a href="/privacy" className="text-white hover:text-emerald-400 transition duration-300">Privacy Policy</a></li>
+            <li><a href="/terms" className="text-white hover:text-emerald-400 transition duration-300">Terms of Service</a></li>
+            <li><a href="/returns" className="text-white hover:text-emerald-400 transition duration-300">Returns & Refunds</a></li>
+            <li><a href="/shipping" className="text-white hover:text-emerald-400 transition duration-300">Shipping Info</a></li>
           </ul>
         </div>
 
@@ -41,16 +41,16 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4 border-b border-emerald-400/30 pb-1">Connect</h3>
           <div className="flex space-x-4">
-            <a href="https://facebook.com" aria-label="Facebook" className="text-gray-400 hover:text-blue-600 transition duration-300">
+            <a href="https://facebook.com" aria-label="Facebook" className="text-white hover:text-blue-600 transition duration-300">
               <FaFacebook size={24} />
             </a>
-            <a href="https://twitter.com" aria-label="Twitter" className="text-gray-400 hover:text-sky-400 transition duration-300">
+            <a href="https://twitter.com" aria-label="Twitter" className="text-white hover:text-sky-400 transition duration-300">
               <FaTwitter size={24} />
             </a>
-            <a href="https://instagram.com" aria-label="Instagram" className="text-gray-400 hover:text-pink-500 transition duration-300">
+            <a href="https://instagram.com" aria-label="Instagram" className="text-white hover:text-pink-500 transition duration-300">
               <FaInstagram size={24} />
             </a>
-            <a href="https://linkedin.com" aria-label="LinkedIn" className="text-gray-400 hover:text-blue-700 transition duration-300">
+            <a href="https://linkedin.com" aria-label="LinkedIn" className="text-white hover:text-blue-700 transition duration-300">
               <FaLinkedin size={24} />
             </a>
           </div>
