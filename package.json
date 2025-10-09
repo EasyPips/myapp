@@ -1,15 +1,15 @@
 {
-  "name": "myapp",
+  "name": "heasycommerce",
   "version": "0.0.0",
   "private": true,
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "homepage": "https://github.com/EasyPips/myapp#readme",
+  "description": "this is the work of Olaoye Emmanuel.",
+  "homepage": "https://github.com/EasyPips/myapp#rea",
   "bugs": {
-    "url": "https://github.com/EasyPips/myapp/issues"
+    "url": "https://github.com/EasyPips/heasycommerce/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EasyPips/myapp.git"
+    "url": "git+https://github.com/EasyPips/heasycommerce.git"
   },
   "license": "ISC",
   "author": "",
