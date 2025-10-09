@@ -42,7 +42,7 @@ const Navbar = ({ user, setUser, cart, isAdmin }) => {
           to="/"
           className="font-bold text-xl text-emerald-100 hover:text-emerald-400 md:inline hidden transition-colors duration-200"
         >
-          My Ecommerce Store
+          <Heasy></Heasy>
         </Link>
       </div>
 
