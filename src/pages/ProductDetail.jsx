@@ -23,8 +23,8 @@ const ProductDetail = () => {
       <p className="text-lg font-semibold mb-4">Price: ${product.price}</p>
       <motion.button
         whileTap={{ scale: 0.95 }}
-        whileHover={{ backgroundColor: '#2563eb', color: '#ffffff' }}
-        style={{ backgroundColor: '#3b82f6', color: '#fff' }}
+        whileHover={{ backgroundColor: '##065F46', color: '#ffffff' }}
+        style={{ backgroundColor: '#065F46', color: '#fff' }}
         className="px-4 py-2 rounded transition-colors duration-200"
         onClick={() => dispatch({ type: 'ADD_TO_CART', product })}
       >

@@ -1,8 +1,10 @@
 import React from 'react';
 import { useCart } from '../context/useCart';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Cart = () => {
+  const navigate = useNavigate()
   const { cart, dispatch } = useCart();
   const total = cart.items.reduce((sum, item) => sum + item.price * item.qty, 0);
   return (
@@ -56,12 +58,18 @@ const Cart = () => {
             ))}
           </AnimatePresence>
           <div className="text-right font-bold text-lg mt-4">Total: ${total.toFixed(2)}</div>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2"
-            onClick={() => dispatch({ type: 'CLEAR_CART' })}
-          >
-            Clear Cart
-          </button>
+          <div className='flex justify-between'>
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2"
+              onClick={() => dispatch({ type: 'CLEAR_CART' })}
+            >
+              Clear Cart
+            </button>
+            <button onClick={() => navigate('/checkout')} className="bg-green-500
+             text-white px-4 py-2 rounded hover:bg-green-600 mt-2">
+              proceed to checkout
+            </button>
+          </div>
         </div>
       )}
     </div>

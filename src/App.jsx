@@ -2,6 +2,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import Footer from './pages/Footer';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
@@ -13,6 +14,7 @@ import { CartProvider } from './context/CartContext';
 import { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 import { useCart } from './context/useCart';
+import Navbar from './pages/Navbar';
 
 function App() {
   // Load user info from localStorage on initial render
@@ -33,6 +35,7 @@ function App() {
 
   // Get cart state from context (if available)
   const { cart = [] } = useCart?.() || {};
+  
 
   // Logout function: clears user info and redirects to login page
   const handleLogout = () => {
@@ -48,49 +51,7 @@ function App() {
     <CartProvider>
       <Router>
         {/* Header and Navigation Bar */}
-        <header className="bg-white shadow mb-8">
-          <nav className="container mx-auto flex items-center justify-between py-4 px-4 text-lg font-medium">
-            {/* Logo on the far left */}
-            <div className="flex items-center gap-2">
-              <img src="/vite.svg" alt="Logo" className="w-8 h-8" />
-              <Link to="/" className="font-bold text-xl hover:text-blue-600">MyStore</Link>
-            </div>
-            {/* Centered navigation links */}
-            <div className="flex gap-6 flex-1 justify-center">
-              <Link to="/products" className="hover:text-blue-600">Products</Link>
-              <Link to="/order-history" className="hover:text-blue-600">Orders</Link>
-              <Link to="/checkout" className="hover:text-blue-600">Checkout</Link>
-              {isAdmin && (
-                <Link to="/admin" className="hover:text-blue-600">Admin</Link>
-              )}
-            </div>
-            {/* Cart and user icons on the far right */}
-            <div className="flex items-center gap-4">
-              {/* Cart icon with badge showing number of items */}
-              <Link to="/cart" className="relative hover:text-blue-500" title="Cart">
-                <FaShoppingCart className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-                    {cart.length}
-                  </span>
-                )}
-              </Link>
-              {/* Show user info and logout if logged in, otherwise show login icon */}
-              {user ? (
-                <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline">{user.username}</span>
-                  <button onClick={handleLogout} title="Logout" className="hover:text-blue-500">
-                    <FaSignOutAlt className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
-                  </button>
-                </div>
-              ) : (
-                <Link to="/login" title="Login" className="hover:text-blue-500">
-                  <FaUserCircle className="w-7 h-7 text-blue-400 hover:text-blue-500 transition-colors" />
-                </Link>
-              )}
-            </div>
-          </nav>
-        </header>
+        <Navbar user={user} cart={cart} handleLogout={handleLogout} isAdmin={isAdmin} />
         {/* Main content area with route definitions */}
         <main className="min-h-screen bg-gray-50 py-8">
           <Routes>
@@ -118,6 +79,7 @@ function App() {
             />
           </Routes>
         </main>
+         <Footer />
       </Router>
     </CartProvider>
   );

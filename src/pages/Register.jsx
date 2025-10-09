@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from '../firebase';
+import { setDoc, doc } from "firebase/firestore";
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -10,27 +13,18 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      setError('Please fill all fields');
-      return;
-    }
-    setLoading(true);
     setError('');
+    setLoading(true);
     try {
-      const res = await fetch('https://your-backend-url.com/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        navigate('/login');
-      } else {
-        setError(data.message || 'Registration failed');
-      }
+      // Firebase uses email for registration
+      const userCredential = await createUserWithEmailAndPassword(auth, username, password);
+      const user = userCredential.user;
+      // Save user role in Firestore (default: user)
+      await setDoc(doc(db, "users", user.uid), { role: "user", email: user.email });
+      setLoading(false);
+      navigate('/login');
     } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
+      setError('Registration failed');
       setLoading(false);
     }
   };
@@ -42,8 +36,8 @@ const Register = () => {
       <form onSubmit={handleRegister} className="space-y-4">
         <input
           className="w-full border px-3 py-2 rounded"
-          type="text"
-          placeholder="Username"
+          type="email"
+          placeholder="Email"
           value={username}
           onChange={e => setUsername(e.target.value)}
         />

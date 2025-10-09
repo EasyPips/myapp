@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from '../firebase';
+import { doc, getDoc } from "firebase/firestore";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -9,30 +12,20 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await fetch('http://localhost:8000/api/token/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        // Fetch user profile to get role
-        const profileRes = await fetch('http://localhost:8000/api/profile/', {
-          headers: { Authorization: `Bearer ${data.access}` },
-        });
-        const profile = await profileRes.json();
-        localStorage.setItem('user', JSON.stringify({
-          username: profile.username,
-          role: profile.role,
-          token: data.access,
-        }));
-        navigate('/');
-      } else {
-        setError(data.detail || 'Login failed');
-      }
-    } catch {
-      setError('Network error');
+      // Firebase uses email for login, so you may want to use email as username
+      const userCredential = await signInWithEmailAndPassword(auth, username, password);
+      const user = userCredential.user;
+      // Fetch user role from Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userData = userDoc.exists() ? userDoc.data() : { role: "user" };
+      const userObj = { username: user.email, role: userData.role, uid: user.uid };
+      localStorage.setItem('user', JSON.stringify(userObj));
+      setUser(userObj);
+      navigate('/');
+    } catch (err) {
+      setError('Invalid credentials');
     }
   };
 
@@ -43,8 +36,8 @@ const Login = () => {
       <form onSubmit={handleLogin} className="space-y-4">
         <input
           className="w-full border px-3 py-2 rounded"
-          type="text"
-          placeholder="Username"
+          type="email"
+          placeholder="Email"
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
@@ -55,13 +48,10 @@ const Login = () => {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600" type="submit">
+        <button className="w-full bg-emerald-500 text-white py-2 rounded hover:bg-emerald-600" type="submit">
           Login
         </button>
       </form>
-      <p className="mt-4 text-center">
-        Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
-      </p>
     </div>
   );
 };
