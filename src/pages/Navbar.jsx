@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FaShoppingCart,
   FaUserCircle,
+  FaUserPlus,
   FaSignOutAlt,
   FaBars,
   FaTimes,
@@ -11,22 +13,36 @@ import {
   FaCreditCard,
   FaUserShield,
 } from 'react-icons/fa';
-import { useState } from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 
-const Navbar = ({ user, cart, handleLogout, isAdmin }) => {
+const Navbar = ({ user, setUser, cart, isAdmin }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('user');
+      setUser(null);
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
   return (
-    <nav className="container mx-auto flex bg-emerald-800 items-center justify-between py-4 px-4 text-lg font-medium">
-      {/* Logo always visible */}
+    <nav className="container mx-auto flex bg-emerald-800 items-center justify-between py-4 px-4 text-lg font-medium sticky top-0 z-10 shadow-lg">
+      {/* Logo */}
       <div className="flex items-center gap-2">
         <img src="/vite.svg" alt="Logo" className="w-8 h-8" />
-        <Link to="/" className="font-bold text-xl text-emerald-100 hover:text-emerald-400 md:inline hidden">
-          Heasycommerce
+        <Link
+          to="/"
+          className="font-bold text-xl text-emerald-100 hover:text-emerald-400 md:inline hidden transition-colors duration-200"
+        >
+          My Ecommerce Store
         </Link>
       </div>
 
@@ -41,38 +57,40 @@ const Navbar = ({ user, cart, handleLogout, isAdmin }) => {
 
       {/* Desktop navigation links and icons */}
       <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
-        <Link to="/" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400">
-          <FaHome className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+        <Link to="/" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200">
+          <FaHome className="w-6 h-6" />
           Home
         </Link>
-        <Link to="/products" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400">
-          <FaBox className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+        <Link to="/products" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200">
+          <FaBox className="w-6 h-6" />
           Products
         </Link>
-        <Link to="/order-history" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400">
-          <FaListAlt className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+        <Link to="/order-history" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200">
+          <FaListAlt className="w-6 h-6" />
           Orders
         </Link>
-        <Link to="/checkout" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400">
-          <FaCreditCard className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+        <Link to="/checkout" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200">
+          <FaCreditCard className="w-6 h-6" />
           Checkout
         </Link>
         {isAdmin && (
-          <Link to="/admin" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400">
-            <FaUserShield className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+          <Link to="/admin" className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200">
+            <FaUserShield className="w-6 h-6" />
             Admin
           </Link>
         )}
       </div>
+
+      {/* Desktop user and cart icons */}
       <div className="hidden md:flex items-center gap-4">
         <Link
           to="/cart"
-          className="flex items-center gap-2 relative text-emerald-100 hover:text-emerald-400"
+          className="flex items-center gap-2 relative text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
           title="Cart"
           aria-label="View shopping cart"
         >
-          <FaShoppingCart className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-          <span className="text-emerald-100 hover:text-emerald-400">Cart</span>
+          <FaShoppingCart className="w-6 h-6" />
+          <span>Cart</span>
           {cart.length > 0 && (
             <span className="absolute -top-2 left-5 bg-red-600 text-emerald-100 text-xs rounded-full px-1">
               {cart.length}
@@ -81,27 +99,38 @@ const Navbar = ({ user, cart, handleLogout, isAdmin }) => {
         </Link>
         {user ? (
           <div className="flex items-center gap-4">
-            <span className="hidden sm:inline text-emerald-100">{user.username}</span>
+            <span className="hidden sm:inline text-emerald-100 truncate max-w-[150px]">{user.email}</span>
             <button
               onClick={handleLogout}
+              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
               title="Logout"
-              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
               aria-label="Log out"
             >
-              <FaSignOutAlt className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-              <span className="text-emerald-100 hover:text-emerald-400">Logout</span>
+              <FaSignOutAlt className="w-6 h-6" />
+              <span>Logout</span>
             </button>
           </div>
         ) : (
-          <Link
-            to="/login"
-            title="Login"
-            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
-            aria-label="Log in"
-          >
-            <FaUserCircle className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-            <span className="text-emerald-100 hover:text-emerald-400">Login</span>
-          </Link>
+          <>
+            <Link
+              to="/login"
+              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
+              title="Login"
+              aria-label="Log in"
+            >
+              <FaUserCircle className="w-6 h-6" />
+              <span>Login</span>
+            </Link>
+            <Link
+              to="/register"
+              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
+              title="Register"
+              aria-label="Register"
+            >
+              <FaUserPlus className="w-6 h-6" />
+              <span>Register</span>
+            </Link>
+          </>
         )}
       </div>
 
@@ -122,7 +151,7 @@ const Navbar = ({ user, cart, handleLogout, isAdmin }) => {
       >
         <div className="flex flex-col p-4 gap-4">
           <button
-            className="self-end text-emerald-100 hover:text-emerald-400"
+            className="self-end text-emerald-100 hover:text-emerald-400 transition-colors"
             onClick={toggleSidebar}
             aria-label="Close menu"
           >
@@ -130,90 +159,100 @@ const Navbar = ({ user, cart, handleLogout, isAdmin }) => {
           </button>
           <Link
             to="/"
-            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
+            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
             onClick={toggleSidebar}
           >
-            <FaHome className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+            <FaHome className="w-6 h-6" />
             Home
           </Link>
           <Link
             to="/products"
-            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
+            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
             onClick={toggleSidebar}
           >
-            <FaBox className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+            <FaBox className="w-6 h-6" />
             Products
           </Link>
           <Link
             to="/order-history"
-            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
+            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
             onClick={toggleSidebar}
           >
-            <FaListAlt className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+            <FaListAlt className="w-6 h-6" />
             Orders
           </Link>
           <Link
             to="/checkout"
-            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
+            className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
             onClick={toggleSidebar}
           >
-            <FaCreditCard className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+            <FaCreditCard className="w-6 h-6" />
             Checkout
           </Link>
           {isAdmin && (
             <Link
               to="/admin"
-              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
+              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
               onClick={toggleSidebar}
             >
-              <FaUserShield className="w-6 h-6 text-emerald-100 hover:text-emerald-400" />
+              <FaUserShield className="w-6 h-6" />
               Admin
             </Link>
           )}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/cart"
-              className="flex items-center gap-2 relative text-emerald-100 hover:text-emerald-400"
-              title="Cart"
-              aria-label="View shopping cart"
-              onClick={toggleSidebar}
-            >
-              <FaShoppingCart className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-              <span className="text-emerald-100 hover:text-emerald-400">Cart</span>
-              {cart.length > 0 && (
-                <span className="absolute -top-2 left-5 bg-red-600 text-emerald-100 text-xs rounded-full px-1">
-                  {cart.length}
-                </span>
-              )}
-            </Link>
-          </div>
+          <Link
+            to="/cart"
+            className="flex items-center gap-2 relative text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
+            title="Cart"
+            aria-label="View shopping cart"
+            onClick={toggleSidebar}
+          >
+            <FaShoppingCart className="w-6 h-6" />
+            <span>Cart</span>
+            {cart.length > 0 && (
+              <span className="absolute -top-2 left-5 bg-red-600 text-emerald-100 text-xs rounded-full px-1">
+                {cart.length}
+              </span>
+            )}
+          </Link>
           {user ? (
             <div className="flex items-center gap-2">
-              <span className="text-emerald-100">{user.username}</span>
+              <span className="text-emerald-100 truncate">{user.email}</span>
               <button
                 onClick={() => {
                   handleLogout();
                   toggleSidebar();
                 }}
+                className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
                 title="Logout"
-                className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
                 aria-label="Log out"
               >
-                <FaSignOutAlt className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-                <span className="text-emerald-100 hover:text-emerald-400">Logout</span>
+                <FaSignOutAlt className="w-6 h-6" />
+                <span>Logout</span>
               </button>
             </div>
           ) : (
-            <Link
-              to="/login"
-              title="Login"
-              className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400"
-              aria-label="Log in"
-              onClick={toggleSidebar}
-            >
-              <FaUserCircle className="w-6 h-6 text-emerald-100 hover:text-emerald-400 transition-colors" />
-              <span className="text-emerald-100 hover:text-emerald-400">Login</span>
-            </Link>
+            <>
+              <Link
+                to="/login"
+                className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
+                title="Login"
+                aria-label="Log in"
+                onClick={toggleSidebar}
+              >
+                <FaUserCircle className="w-6 h-6" />
+                <span>Login</span>
+              </Link>
+              <Link
+                to="/register"
+                className="flex items-center gap-2 text-emerald-100 hover:text-emerald-400 transition-colors duration-200"
+                title="Register"
+                aria-label="Register"
+                onClick={toggleSidebar}
+              >
+                <FaUserPlus className="w-6 h-6" />
+                <span>Register</span>
+              </Link>
+            </>
           )}
         </div>
       </div>
