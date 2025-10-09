@@ -1,16 +1,17 @@
-# React + Vite
+Heasycommerce
+Heasycommerce is a modern, responsive e-commerce web application built with React, Tailwind CSS, and Firebase. It features a user-friendly interface for browsing products, managing a cart, and handling user authentication, designed for a seamless shopping experience.FeaturesResponsive Design: A mobile-friendly layout with a collapsible sidebar (Navbar) and adaptive product grids (Products, Home).
+Product Browsing: Display products with images, prices, and details, including a featured section with discounts (Home).
+Cart Management: Add products to a cart with real-time updates using a custom useCart context.
+User Authentication: Login/logout functionality with admin access support (Navbar).
+Animated UI: Smooth animations for product cards and a scrolling banner using Framer Motion.
+Firebase Backend: Firestore for product and cart data, Authentication for user management, and Hosting for deployment.
+Modern Styling: Consistent emerald-themed design (bg-emerald-800, text-emerald-100) with Tailwind CSS.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tech StackFrontend: React, React Router, Tailwind CSS, Framer Motion
+Backend: Firebase Firestore, Firebase Authentication
+Hosting: Firebase Hosting
+Tools: Vite (build tool), npm
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+LicenseThis project is licensed under the MIT License. See the LICENSE file for details.AcknowledgmentsBuilt with React, Tailwind CSS, and Firebase.
+Animations powered by Framer Motion.
+Inspired by modern e-commerce platforms for a clean, user-friendly experience.
